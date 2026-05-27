@@ -1,0 +1,107 @@
+### 心事盒APP API 测试脚本
+### 使用方法：安装 VS Code REST Client 插件，点击 "Send Request"
+
+### 1. 发送短信验证码
+POST http://localhost:3000/api/auth/send-sms
+Content-Type: application/json
+
+{
+  "phone": "13800138000"
+}
+
+### 2. 手机号登录（验证码从后端控制台查看，mock模式为6位随机数）
+POST http://localhost:3000/api/auth/login-phone
+Content-Type: application/json
+
+{
+  "phone": "13800138000",
+  "code": "123456"
+}
+
+### 3. 获取个人资料（需要替换为实际返回的token）
+GET http://localhost:3000/api/user/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
+
+### 4. 发布公开笔记
+POST http://localhost:3000/api/notes
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
+
+{
+  "title": "我的第一篇笔记",
+  "content": "这是一篇公开笔记，所有人都可以看到。",
+  "visibility": "public",
+  "price": 0
+}
+
+### 5. 发布付费笔记
+POST http://localhost:3000/api/notes
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
+
+{
+  "title": "付费笔记 - 独家内容",
+  "content": "这是一篇付费笔记，需要购买才能查看全文。",
+  "visibility": "paid",
+  "price": 100
+}
+
+### 6. 获取笔记列表
+GET http://localhost:3000/api/notes?page=1&limit=20
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
+
+### 7. 获取笔记详情
+GET http://localhost:3000/api/notes/替换为实际笔记ID
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
+
+### 8. 购买笔记
+POST http://localhost:3000/api/pay/purchase-note
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
+
+{
+  "noteId": "替换为实际笔记ID",
+  "amount": 100
+}
+
+### 9. 申请提现
+POST http://localhost:3000/api/withdrawals
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
+
+{
+  "amount": 100,
+  "accountName": "张三",
+  "accountNumber": "6222021234567890123"
+}
+
+### 10. 管理员登录
+POST http://localhost:3000/api/admin/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+### 11. 获取统计数据
+GET http://localhost:3000/api/admin/dashboard
+Authorization: Bearer 替换为管理员token
+
+### 12. 获取用户列表
+GET http://localhost:3000/api/admin/users?page=1&limit=20
+Authorization: Bearer 替换为管理员token
+
+### 13. 获取提现审核列表
+GET http://localhost:3000/api/admin/withdrawals?page=1&limit=20&status=pending
+Authorization: Bearer 替换为管理员token
+
+### 14. 审核提现通过
+PUT http://localhost:3000/api/admin/withdrawals/替换为提现ID
+Content-Type: application/json
+Authorization: Bearer 替换为管理员token
+
+{
+  "status": "approved",
+  "remark": "审核通过"
+}
