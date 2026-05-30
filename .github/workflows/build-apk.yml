@@ -28,6 +28,19 @@ jobs:
       - name: Install Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Generate temporary keystore
+        run: |
+          cd mobile/android/app
+          keytool -genkey -v \
+            -keystore xinshige.keystore \
+            -alias xinshige \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass xinshige123 \
+            -keypass xinshige123 \
+            -dname "CN=xinshige"
+
       - name: Get dependencies
         run: |
           cd mobile
