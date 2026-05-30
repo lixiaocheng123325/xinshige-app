@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:universal_html/html.dart' as html;
 import '../../controllers/auth_controller.dart';
+import '../../services/storage_service.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -65,6 +67,20 @@ class LoginPage extends StatelessWidget {
                       ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
                       : const Text('登录', style: TextStyle(fontSize: 16)),
                 )),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                height: 40,
+                child: TextButton(
+                  onPressed: () async {
+                    await StorageService.to.clearAll();
+                    Get.snackbar('提示', '缓存已清除，页面即将刷新');
+                    await Future.delayed(const Duration(seconds: 1));
+                    html.window.location.reload();
+                  },
+                  child: const Text('🧹 清除缓存', style: TextStyle(color: Colors.grey)),
+                ),
               ),
             ],
           ),
