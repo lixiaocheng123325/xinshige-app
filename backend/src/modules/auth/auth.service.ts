@@ -19,7 +19,7 @@ export class AuthService {
   ) {}
 
   async sendSms(dto: SendSmsDto) {
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const code = process.env.SMS_MOCK === 'true' ? '571255' : Math.floor(100000 + Math.random() * 900000).toString();
     const expireAt = new Date(Date.now() + 5 * 60 * 1000);
 
     const smsCode = this.smsCodeRepo.create({

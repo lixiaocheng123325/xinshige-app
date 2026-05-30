@@ -19,13 +19,16 @@ class ApiService extends GetxService {
     _dio.interceptors.add(dio.InterceptorsWrapper(
       onRequest: (options, handler) {
         final token = StorageService.to.getToken();
-        if (token != null) {
+        print('>>> API Request: ${options.method} ${options.path}, token=${token != null ? 'present(${token.substring(0, token.length > 8 ? 8 : token.length)}...)' : 'null'}');
+        if (token != null && token.isNotEmpty) {
           options.headers['Authorization'] = 'Bearer $token';
         }
         handler.next(options);
       },
       onError: (error, handler) {
+        print('>>> API Error: status=${error.response?.statusCode}, msg=${error.message}, path=${error.requestOptions.path}');
         if (error.response?.statusCode == 401) {
+          print('>>> 401 detected, navigating to /login');
           StorageService.to.removeToken();
           Get.offAllNamed('/login');
         }

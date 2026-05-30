@@ -21,16 +21,23 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
 
   Future<void> loadDetail() async {
     final args = Get.arguments;
-    if (args == null) return;
+    print('>>> NoteDetailPage loadDetail, args=$args, id=${args?['id']}');
+    if (args == null) {
+      print('>>> args is null, skipping request');
+      setState(() => isLoading = false);
+      return;
+    }
     try {
       final res = await ApiService.to.get('/notes/${args['id']}');
+      print('>>> NoteDetailPage response: status=${res.statusCode}, data keys=${(res.data as Map).keys.toList()}');
       setState(() {
         note = res.data['data'];
         isLoading = false;
       });
     } catch (e) {
+      print('>>> NoteDetailPage error: $e');
       setState(() => isLoading = false);
-      Get.snackbar('错误', '加载失败');
+      Get.snackbar('错误', '加载失败: $e');
     }
   }
 

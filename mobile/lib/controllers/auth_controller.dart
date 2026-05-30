@@ -16,7 +16,9 @@ class AuthController extends GetxController {
     }
     try {
       isLoading.value = true;
-      await ApiService.to.post('/auth/send-sms', data: {'phone': phoneController.text});
+      final phone = phoneController.text.trim();
+      print('>>> SendSMS request: phone=$phone');
+      await ApiService.to.post('/auth/send-sms', data: {'phone': phone});
       Get.snackbar('成功', '验证码已发送');
       countdown.value = 60;
       _startCountdown();
@@ -42,9 +44,12 @@ class AuthController extends GetxController {
     }
     try {
       isLoading.value = true;
+      final phone = phoneController.text.trim();
+      final code = codeController.text.trim();
+      print('>>> Login request: phone=$phone, code=$code');
       final res = await ApiService.to.post('/auth/login-phone', data: {
-        'phone': phoneController.text,
-        'code': codeController.text,
+        'phone': phone,
+        'code': code,
       });
       final responseData = res.data['data'];
       if (responseData == null || responseData['accessToken'] == null) {
