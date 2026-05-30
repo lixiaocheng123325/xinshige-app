@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../services/api_service.dart';
+import '../../services/storage_service.dart';
 
 class NoteDetailPage extends StatefulWidget {
   const NoteDetailPage({super.key});
@@ -66,8 +67,11 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
     final bool isPaid = note['visibility'] == 'paid';
     final bool canViewFull = note['isPurchased'] == true;
 
+    final tokenStatus = StorageService.to.getToken() != null ? '✅有Token' : '❌无Token';
     return Scaffold(
-      appBar: AppBar(title: Text(note['title'] ?? '笔记详情')),
+      appBar: AppBar(
+        title: Text(note['title'] ?? '笔记详情'),
+        actions: [TextButton(onPressed: () {}, child: Text(tokenStatus, style: const TextStyle(color: Colors.white)))]),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

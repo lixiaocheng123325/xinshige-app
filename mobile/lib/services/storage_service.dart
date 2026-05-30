@@ -1,28 +1,28 @@
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageService extends GetxService {
   static StorageService get to => Get.find();
-  late final GetStorage _box;
+  late final SharedPreferences _prefs;
 
   Future<StorageService> init() async {
-    _box = GetStorage();
+    _prefs = await SharedPreferences.getInstance();
     return this;
   }
 
-  String? getToken() => _box.read('access_token');
-  Future<void> setToken(String token) async => await _box.write('access_token', token);
-  Future<void> removeToken() async => await _box.remove('access_token');
+  String? getToken() => _prefs.getString('access_token');
+  Future<void> setToken(String token) async => await _prefs.setString('access_token', token);
+  Future<void> removeToken() async => await _prefs.remove('access_token');
 
-  String? getRefreshToken() => _box.read('refresh_token');
-  Future<void> setRefreshToken(String token) async => await _box.write('refresh_token', token);
-  Future<void> removeRefreshToken() async => await _box.remove('refresh_token');
+  String? getRefreshToken() => _prefs.getString('refresh_token');
+  Future<void> setRefreshToken(String token) async => await _prefs.setString('refresh_token', token);
+  Future<void> removeRefreshToken() async => await _prefs.remove('refresh_token');
 
   Map<String, dynamic>? getUser() {
-    final json = _box.read('user_info');
+    final json = _prefs.getString('user_info');
     return json != null ? {'id': json} : null;
   }
 
-  Future<void> setUserInfo(String json) async => await _box.write('user_info', json);
-  Future<void> clearAll() async => await _box.erase();
+  Future<void> setUserInfo(String json) async => await _prefs.setString('user_info', json);
+  Future<void> clearAll() async => await _prefs.clear();
 }

@@ -131,7 +131,11 @@ export class PaymentService {
 
   async purchaseNote(userId: string, noteId: string, amount: number) {
     const user = await this.userRepo.findOne({ where: { id: userId } });
-    if (!user || user.balance < amount) {
+    if (!user) {
+      throw new BadRequestException('用户不存在');
+    }
+    // Mock 模式下免余额直接购买，方便测试
+    if (process.env.PAY_MOCK !== 'true' && user.balance < amount) {
       throw new BadRequestException('余额不足');
     }
 
